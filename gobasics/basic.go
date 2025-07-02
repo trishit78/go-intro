@@ -2,7 +2,106 @@ package main
 
 import "fmt"                 //import fmt -> #include<iostream>  in cpp
 
+
+type SellableProduct interface{
+	buy() 
+	getDiscount() int
+
+}
+
+func check_discountAndBuy(p SellableProduct){
+	discount := p.getDiscount()
+	if discount>30 {
+		fmt.Println(("Discount is good,buying the product"))
+		p.buy()
+		return
+	}  else{
+		fmt.Println("Discount is not good,not buying the product")
+		return
+	}
+}
+type Product struct{
+	name string
+	price int              // ->struct is objects 
+	company string
+}
+
+func newProduct(name string,price int,company string) *Product {  //taking product instance
+	p:=Product{
+		name:name,
+		price: price,       // -> constructor of the product
+		company: company,
+	}
+	//  return p        returning a copy of p -> creating double object          
+	return &p   // this returning address of p
+}
+
+func fun(copyOfP Product){
+	// this p is a copy of the product passed to this function
+	copyOfP.name="macbook"
+
+}
+
+func pass_ref(p *Product){
+	p.name = "macbook pro"            // -> this is changing the object
+} 
+ 
+// member function of a struct
+func (p *Product) display(short bool){
+	if(short){
+		fmt.Println("Name     ",p.name)
+		return
+	}
+
+	fmt.Println("Name",p.name)
+	fmt.Println("Price",p.price)
+	fmt.Println("Name",p.company)
+
+}
+
+func (i *Product) buy(){
+	fmt.Println("name is ",i.name,"price is", i.price)
+}
+
+func (p *Product) getDiscount() int {
+	discount := p.price*20/100
+	fmt.Print("name of the discounted product",p.name,"discount is",discount)
+	return discount
+}
+
+
 func main(){
+
+	new_p:=newProduct("iphone 15",1000,"apple inc");   // new_p is the pointer to the product
+	fmt.Println(new_p.name)
+	fmt.Println(new_p.price)
+	fmt.Println(new_p.company)
+	
+	pass_ref(new_p)
+	
+	fmt.Println(new_p.name)
+	new_p.display(true)
+
+	fmt.Println("........................")
+	
+	
+	check_discountAndBuy(new_p)
+	
+	fmt.Println("..................")
+
+
+
+
+
+	p:= Product{
+		name:"iphone",
+		price : 1000,
+		company: "Apple",
+	}
+	fmt.Println(p.name)
+
+	fun(p)        // passing a copy of the object and getting the same object not updated object
+
 	fmt.Println("hello");
 	fmt.Println('h');     // ->single character
 	var productName string= "hiiii"
@@ -108,5 +207,3 @@ func pointers(){
 	fmt.Println("pointer to i",&val)
 	fmt.Println("value of val",*val)
 }
-
-//explain more on garbage collector
